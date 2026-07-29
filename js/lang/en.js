@@ -65,7 +65,7 @@ registerLanguage("en", {
   "bestTitle": "Best effect – the science",
   "bestPill": "🔬 Evidence-based tips",
   "pBreathT": "Breathing & Beach",
-  "pBreathS": "Breathe with the waves — a calming break while you study.",
+  "pBreathS": "A break while you study: breathe with the waves, then back to the cards.",
   "brStart": "Start",
   "brStop": "Stop",
   "brSound": "Sound",
@@ -140,7 +140,10 @@ registerLanguage("en", {
   "cZn": "Zinc",
   "reviewedTxt": "Content and references last reviewed:",
   "dvNote": "<b>%DV</b> is the percentage of the adult daily reference intake (FDA Daily Value). <b>„—\"</b> means there is no reliable measured figure — not that the value is zero.",
-  "porNote": "The daily portion differs by seed: about 30 g for most, 15 g for chia and flax, 10 g for psyllium, 3 g for black cumin."
+  "porNote": "The daily portion differs by seed: about 30 g for most, 15 g for chia and flax, 10 g for psyllium, 3 g for black cumin.",
+  "pTrackS": "Tick off what you ate today. The measurable effect comes from 8–12 weeks of consistency, not from one day.",
+  "pTimerS": "Soaks you start keep running here — even after you reload the page.",
+  "pTipsS": "The most practical things to know, in rotation."
  },
  "tags": {
   "allergen": "⚠️ Major allergen",

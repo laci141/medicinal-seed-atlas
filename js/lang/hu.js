@@ -65,7 +65,7 @@ registerLanguage("hu", {
   "bestTitle": "Legjobb hatás – tudományosan",
   "bestPill": "🔬 Bizonyíték-alapú tippek",
   "pBreathT": "Légzés & Tengerpart",
-  "pBreathS": "Lélegezz a hullámokkal — nyugtató szünet tanulás közben.",
+  "pBreathS": "Tanulás közbeni szünet: lélegezz a hullámokkal, aztán vissza a kártyákhoz.",
   "brStart": "Indítás",
   "brStop": "Leállítás",
   "brSound": "Hang",
@@ -140,7 +140,10 @@ registerLanguage("hu", {
   "cZn": "Cink",
   "reviewedTxt": "Tartalom és hivatkozások utoljára ellenőrizve:",
   "dvNote": "A <b>%DV</b> a felnőtt napi beviteli referenciaérték (FDA Daily Value) százaléka. A <b>„—\"</b> azt jelenti, hogy nincs megbízható mért adat — nem azt, hogy nulla.",
-  "porNote": "A napi adag magonként eltér: a legtöbbnél ~30 g, chiánál és lennél 15 g, psylliumnál 10 g, feketeköménynél 3 g."
+  "porNote": "A napi adag magonként eltér: a legtöbbnél ~30 g, chiánál és lennél 15 g, psylliumnál 10 g, feketeköménynél 3 g.",
+  "pTrackS": "Pipáld ki, amit ma megettél. A mérhető hatás 8–12 hét rendszerességtől jön, nem egy naptól.",
+  "pTimerS": "Az elindított áztatások itt futnak tovább — az oldal újratöltése után is.",
+  "pTipsS": "A leggyakorlatibb tudnivalók, forgó sorrendben."
  },
  "tags": {
   "allergen": "⚠️ Fő allergén",

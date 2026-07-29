@@ -65,7 +65,7 @@ registerLanguage("ro", {
   "bestTitle": "Efect maxim – științific",
   "bestPill": "🔬 Sfaturi bazate pe dovezi",
   "pBreathT": "Respirație & Plajă",
-  "pBreathS": "Respiră odată cu valurile — o pauză liniștitoare în timpul învățării.",
+  "pBreathS": "O pauză în timpul învățării: respiră cu valurile, apoi înapoi la carduri.",
   "brStart": "Start",
   "brStop": "Stop",
   "brSound": "Sunet",
@@ -140,7 +140,10 @@ registerLanguage("ro", {
   "cZn": "Zinc",
   "reviewedTxt": "Conținut și referințe verificate ultima dată:",
   "dvNote": "<b>%DV</b> este procentul din valoarea zilnică de referință pentru adulți (FDA Daily Value). <b>„—\"</b> înseamnă că nu există date măsurate de încredere — nu că valoarea e zero.",
-  "porNote": "Porția zilnică diferă de la o sămânță la alta: la majoritatea ~30 g, la chia și in 15 g, la psyllium 10 g, la chimenul negru 3 g."
+  "porNote": "Porția zilnică diferă de la o sămânță la alta: la majoritatea ~30 g, la chia și in 15 g, la psyllium 10 g, la chimenul negru 3 g.",
+  "pTrackS": "Bifează ce ai mâncat azi. Efectul măsurabil vine din 8–12 săptămâni de regularitate, nu dintr-o zi.",
+  "pTimerS": "Înmuierile pornite continuă aici — chiar și după reîncărcarea paginii.",
+  "pTipsS": "Cele mai practice lucruri de știut, în ordine rotativă."
  },
  "tags": {
   "allergen": "⚠️ Alergen major",

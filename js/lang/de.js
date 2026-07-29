@@ -65,7 +65,7 @@ registerLanguage("de", {
   "bestTitle": "Beste Wirkung – wissenschaftlich",
   "bestPill": "🔬 Evidenzbasierte Tipps",
   "pBreathT": "Atmung & Strand",
-  "pBreathS": "Atme mit den Wellen — eine beruhigende Pause beim Lernen.",
+  "pBreathS": "Eine Pause beim Lernen: atme mit den Wellen, dann zurück zu den Karten.",
   "brStart": "Start",
   "brStop": "Stopp",
   "brSound": "Ton",
@@ -140,7 +140,10 @@ registerLanguage("de", {
   "cZn": "Zink",
   "reviewedTxt": "Inhalt und Quellen zuletzt geprüft:",
   "dvNote": "<b>%DV</b> ist der Anteil am täglichen Referenzwert für Erwachsene (FDA Daily Value). <b>„—\"</b> bedeutet, dass kein verlässlicher Messwert vorliegt — nicht, dass der Wert null ist.",
-  "porNote": "Die Tagesportion ist je Samen verschieden: bei den meisten ~30 g, bei Chia und Lein 15 g, bei Psyllium 10 g, bei Schwarzkümmel 3 g."
+  "porNote": "Die Tagesportion ist je Samen verschieden: bei den meisten ~30 g, bei Chia und Lein 15 g, bei Psyllium 10 g, bei Schwarzkümmel 3 g.",
+  "pTrackS": "Hake ab, was du heute gegessen hast. Die messbare Wirkung kommt aus 8–12 Wochen Regelmäßigkeit, nicht aus einem Tag.",
+  "pTimerS": "Gestartete Einweichungen laufen hier weiter — auch nach dem Neuladen der Seite.",
+  "pTipsS": "Das Praktischste zum Wissen, im Wechsel."
  },
  "tags": {
   "allergen": "⚠️ Hauptallergen",
