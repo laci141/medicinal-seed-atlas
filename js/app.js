@@ -433,44 +433,138 @@ document.getElementById('tbPanels').addEventListener('click',function(){setRight
 var PATTERNS={box:[4,4,4,4],relax:[4,7,8,0],coh:[5.5,0,5.5,0],ocean:[4,0,6,0]};
 var brMode='box', brOn=false, brPhase=0, brT0=0, brCycles=0, brRAF=null;
 var cv=document.getElementById('waveCv'), ctx=cv.getContext('2d'),
-    orb=document.getElementById('orb'), phaseEl=document.getElementById('brPhase'),
+    phaseEl=document.getElementById('brPhase'),
     cntEl=document.getElementById('brCount'), beach=document.getElementById('beach');
-var waveT=0, breath=0;
+var waveT=0, breath=0, brPhaseF=0, idleT=0;
+var ripples=[], motes=[];
 
+/* Fázisszínek: belégzés = világos kék, benttartás = fehér,
+   kilégzés = türkiz, szünet = tompa szürkéskék. */
+var PHASE_COL=[[125,211,252],[224,242,254],[94,234,212],[148,163,184]];
+function phaseRGB(){ var c=PHASE_COL[brOn?brPhase:0]; return c[0]+','+c[1]+','+c[2]; }
+
+function dpr(){ return Math.min(window.devicePixelRatio||1,2); }
 function sizeCanvas(){
-  var r=beach.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
-  cv.width=Math.max(1,Math.round(r.width*dpr)); cv.height=Math.max(1,Math.round(r.height*dpr));
-  ctx.setTransform(dpr,0,0,dpr,0,0);
+  var r=beach.getBoundingClientRect(), d=dpr();
+  cv.width=Math.max(1,Math.round(r.width*d)); cv.height=Math.max(1,Math.round(r.height*d));
+  ctx.setTransform(d,0,0,d,0,0);
+  seedMotes(r.width,r.height);
 }
 window.addEventListener('resize',sizeCanvas);
 
+/* Lassan felfelé szálló apró fénypontok — mélységet adnak a víznek. */
+function seedMotes(w,h){
+  motes=[];
+  for(var i=0;i<20;i++) motes.push({x:Math.random()*w,y:Math.random()*h,
+    r:Math.random()*1.3+0.4, sp:Math.random()*0.16+0.04, ph:Math.random()*6.283});
+}
+
 function drawBeach(){
-  var w=cv.width/(Math.min(window.devicePixelRatio||1,2)), h=cv.height/(Math.min(window.devicePixelRatio||1,2));
+  var d=dpr(), w=cv.width/d, h=cv.height/d;
+  if(!w||!h) return;
   ctx.clearRect(0,0,w,h);
-  /* nap / hold */
-  var sunY=h*0.30-breath*10, g=ctx.createRadialGradient(w*0.76,sunY,2,w*0.76,sunY,42);
-  g.addColorStop(0,'rgba(255,236,190,.95)'); g.addColorStop(.35,'rgba(255,196,120,.55)');
-  g.addColorStop(1,'rgba(255,170,90,0)');
-  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(w*0.76,sunY,42,0,6.284); ctx.fill();
-  /* homok */
-  ctx.fillStyle='rgba(232,206,160,.16)';
-  ctx.fillRect(0,h*0.88,w,h*0.12);
-  /* hullámrétegek */
+
+  var cx=w/2, cy=h*0.40, cs=phaseRGB();
+  var R=Math.min(w,h)*0.19*(0.70+breath*0.58);
+  /* A vízvonal jóval a kör alatt van, hogy a hullámok soha ne érjenek bele. */
+  var waterY=h*0.72;
+
+  motes.forEach(function(m){
+    m.y-=m.sp; if(m.y<-4){ m.y=h+4; m.x=Math.random()*w; }
+    var tw=0.35+0.3*Math.sin(waveT*1.4+m.ph);
+    ctx.beginPath(); ctx.arc(m.x,m.y,m.r,0,6.283);
+    ctx.fillStyle='rgba(190,225,255,'+(tw*0.45).toFixed(3)+')'; ctx.fill();
+  });
+
+  /* Halo: a kör fénye beteríti a hátteret, és vele együtt lélegzik. */
+  var halo=ctx.createRadialGradient(cx,cy,R*0.2,cx,cy,R*3.2);
+  halo.addColorStop(0,'rgba('+cs+',0.20)');
+  halo.addColorStop(0.5,'rgba('+cs+',0.06)');
+  halo.addColorStop(1,'rgba('+cs+',0)');
+  ctx.fillStyle=halo; ctx.fillRect(0,0,w,h);
+
+  /* Kifutó gyűrűk: minden be- és kilégzés kezdetén indul egy. */
+  ripples.forEach(function(p){
+    ctx.beginPath(); ctx.arc(cx,cy,R+p.r,0,6.283);
+    ctx.strokeStyle='rgba('+cs+','+(p.a*0.45).toFixed(3)+')';
+    ctx.lineWidth=1.3; ctx.stroke();
+  });
+
+  drawWater(w,h,waterY);
+
+  /* A kör tükröződése a vízen, a hullámokkal együtt remegve. */
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0,waterY-4,w,h-waterY+4); ctx.clip();
+  var ry=waterY+R*0.7, rr=R*1.2;
+  var refl=ctx.createRadialGradient(cx,ry,1,cx,ry,rr*1.6);
+  refl.addColorStop(0,'rgba('+cs+',0.20)'); refl.addColorStop(1,'rgba('+cs+',0)');
+  ctx.fillStyle=refl;
+  ctx.beginPath();
+  ctx.ellipse(cx,ry,rr,R*0.42+Math.sin(waveT*1.7)*2.5,0,0,6.283);
+  ctx.fill();
+  ctx.restore();
+
+  drawOrb(cx,cy,R,cs);
+
+  /* Finom sötét sáv legalul, hogy a fázisfelirat a hullámok fölött is olvasható legyen. */
+  var scrim=ctx.createLinearGradient(0,h-44,0,h);
+  scrim.addColorStop(0,'rgba(4,10,20,0)');
+  scrim.addColorStop(1,'rgba(4,10,20,0.55)');
+  ctx.fillStyle=scrim; ctx.fillRect(0,h-44,w,44);
+}
+
+function drawWater(w,h,y0){
   var layers=[
-    {y:h*0.60,a:5,l:0.028,s:0.55,c:'rgba(56,189,248,.22)'},
-    {y:h*0.70,a:7,l:0.021,s:0.85,c:'rgba(45,212,191,.24)'},
-    {y:h*0.80,a:9,l:0.016,s:1.15,c:'rgba(125,211,252,.30)'},
-    {y:h*0.89,a:6,l:0.034,s:1.6, c:'rgba(255,255,255,.24)'}
+    {y:y0,          a:4.5,l:0.030,s:0.50,c:'rgba(56,189,248,.15)'},
+    {y:y0+h*0.055,  a:6,  l:0.022,s:0.80,c:'rgba(45,212,191,.19)'},
+    {y:y0+h*0.115,  a:8,  l:0.017,s:1.10,c:'rgba(125,211,252,.24)'},
+    {y:y0+h*0.180,  a:5,  l:0.036,s:1.70,c:'rgba(255,255,255,.18)'}
   ];
   layers.forEach(function(L){
-    var amp=L.a*(1+breath*0.75);
+    var amp=L.a*(1+breath*0.7);
     ctx.beginPath(); ctx.moveTo(0,h);
-    for(var x=0;x<=w;x+=4){
-      var y=L.y+Math.sin((x*L.l)+waveT*L.s)*amp+Math.sin((x*L.l*2.3)+waveT*L.s*1.7)*amp*0.35;
+    for(var x=0;x<=w;x+=3){
+      var y=L.y+Math.sin(x*L.l+waveT*L.s)*amp+Math.sin(x*L.l*2.3+waveT*L.s*1.7)*amp*0.35;
       ctx.lineTo(x,y);
     }
     ctx.lineTo(w,h); ctx.closePath(); ctx.fillStyle=L.c; ctx.fill();
   });
+}
+
+function drawOrb(cx,cy,R,cs){
+  /* Üvegszerű test: a fény bal-felülről esik rá. */
+  var g=ctx.createRadialGradient(cx-R*0.30,cy-R*0.34,R*0.05,cx,cy,R);
+  g.addColorStop(0,   'rgba(255,255,255,0.95)');
+  g.addColorStop(0.34,'rgba('+cs+',0.72)');
+  g.addColorStop(0.74,'rgba('+cs+',0.28)');
+  g.addColorStop(1,   'rgba('+cs+',0.05)');
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,6.283); ctx.fillStyle=g; ctx.fill();
+
+  /* Lassan körbeforduló fénypászta a gömb belsejében. */
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,R*0.97,0,6.283); ctx.clip();
+  var a=waveT*0.30;
+  var sh=ctx.createLinearGradient(cx+Math.cos(a)*R,cy+Math.sin(a)*R,
+                                  cx-Math.cos(a)*R,cy-Math.sin(a)*R);
+  sh.addColorStop(0,  'rgba(255,255,255,0.28)');
+  sh.addColorStop(0.5,'rgba(255,255,255,0)');
+  sh.addColorStop(1,  'rgba('+cs+',0.22)');
+  ctx.fillStyle=sh; ctx.fillRect(cx-R,cy-R,R*2,R*2);
+  ctx.restore();
+
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,6.283);
+  ctx.strokeStyle='rgba(255,255,255,0.32)'; ctx.lineWidth=1; ctx.stroke();
+
+  /* Haladó gyűrű: megmutatja, hol tartasz az aktuális fázisban. */
+  var pr=R+8;
+  ctx.beginPath(); ctx.arc(cx,cy,pr,0,6.283);
+  ctx.strokeStyle='rgba(255,255,255,0.09)'; ctx.lineWidth=2.5; ctx.stroke();
+  if(brOn&&brPhaseF>0.001){
+    ctx.beginPath();
+    ctx.arc(cx,cy,pr,-Math.PI/2,-Math.PI/2+6.283*Math.min(1,brPhaseF));
+    ctx.strokeStyle='rgba('+cs+',0.92)'; ctx.lineWidth=2.5;
+    ctx.lineCap='round'; ctx.stroke(); ctx.lineCap='butt';
+  }
 }
 function phaseName(i){var t=T();return [t.brIn,t.brHold,t.brOut,t.brHold2][i];}
 function stepBreath(now){
@@ -479,8 +573,12 @@ function stepBreath(now){
   var el=(now-brT0)/1000;
   if(el>=dur){ brT0=now; brPhase=(brPhase+1)%4; if(brPhase===0)brCycles++;
     while(p[brPhase]===0){ brPhase=(brPhase+1)%4; if(brPhase===0)brCycles++; }
-    el=0; dur=p[brPhase]; }
+    el=0; dur=p[brPhase];
+    /* Be- és kilégzés indulásakor útnak indul egy gyűrű. */
+    if(brPhase===0||brPhase===2) ripples.push({r:0,a:1});
+  }
   var f=Math.min(1,el/dur);
+  brPhaseF=f;
   if(brPhase===0) breath=f;
   else if(brPhase===1) breath=1;
   else if(brPhase===2) breath=1-f;
@@ -492,9 +590,13 @@ function stepBreath(now){
 }
 function loop(now){
   waveT+=0.016*(1+breath*0.8);
-  if(brOn) stepBreath(now); else { breath+=(0-breath)*0.02; }
-  orb.style.transform='translate(-50%,-50%) scale('+(0.62+breath*0.78).toFixed(3)+')';
-  orb.style.opacity=(0.55+breath*0.45).toFixed(2);
+  if(brOn) stepBreath(now);
+  else {
+    /* Nyugalomban is él: nagyon lassú, alig érzékelhető pulzálás. */
+    idleT+=0.011; breath=0.20+0.13*Math.sin(idleT); brPhaseF=0;
+  }
+  ripples.forEach(function(p){ p.r+=0.85; p.a*=0.974; });
+  if(ripples.length) ripples=ripples.filter(function(p){return p.a>0.02;});
   drawBeach();
   brRAF=requestAnimationFrame(loop);
 }
