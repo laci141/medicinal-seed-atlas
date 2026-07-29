@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080b16">
+<title>Medicinal Seed Atlas</title>
+<meta name="description" content="An evidence-rated atlas of 15 edible seeds: flashcards, a sortable nutrient table, soaking timers and PubMed-linked research. Hungarian, Romanian, English and German.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 4C11 10 8 22 12 32c3 6 13 6 16 0C32 22 29 10 20 4Z' fill='%23fbbf2433' stroke='%23fbbf24' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-controls="sidebar" aria-expanded="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M4 6h16M4 12h16M4 18h16"/></svg><span data-i18n="brand">Magok</span>
+    </button>
+    <div class="titlewrap">
+      <h1 data-i18n="title">Magok · Tanulókártyák</h1>
+      <p data-i18n="subtitle">15 mag · fordíts a válaszért</p>
+    </div>
+    <div class="langs" role="group" aria-label="Language">
+      <button class="lang" data-lang="hu" aria-pressed="true">🇭🇺 HU</button>
+      <button class="lang" data-lang="ro" aria-pressed="false">🇷🇴 RO</button>
+      <button class="lang" data-lang="en" aria-pressed="false">🇬🇧 EN</button>
+      <button class="lang" data-lang="de" aria-pressed="false">🇩🇪 DE</button>
+    </div>
+    <div class="toolbtns">
+      <button class="primer-btn" id="primerBtn">📖 <span data-i18n="btnPrimer">Hogyan olvassuk a bizonyítékokat?</span></button>
+      <button class="primer-btn" id="compareBtn">📊 <span data-i18n="btnCompare">Összehasonlítás</span></button>
+      <button class="primer-btn" id="soakTableBtn">⏱️ <span data-i18n="btnSoakTable">Áztatás-táblázat</span></button>
+      <button class="primer-btn" id="studyBtn">🔬 <span data-i18n="studyAll">Minden hivatkozás</span></button>
+      <button class="primer-btn" id="bestBtn">🎯 <span data-i18n="btnBest">Legjobb hatás</span></button>
+      <button class="primer-btn" id="rightBtn">🌊 <span data-i18n="btnPanels">Panelek</span></button>
+    </div>
+  </div>
+
+  <div class="shell" id="shell" data-nav="open" data-right="open">
+    <div class="backdrop" id="backdrop"></div>
+    <div class="rbackdrop" id="rbackdrop"></div>
+
+    <aside class="sidebar glass" id="sidebar">
+      <div class="side-head"><span class="lbl" id="sideLbl">Magok · 15</span>
+        <button class="collapse" id="collapseBtn" title="Menü" aria-label="Menu">«</button></div>
+      <div class="side-search" id="sideSearch" data-has="0">
+        <span class="mag">🔍</span>
+        <input type="search" id="navSearch" autocomplete="off" spellcheck="false">
+        <button class="clr" id="navClear" aria-label="Clear">✕</button>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <p class="side-note" id="sideNote"></p>
+    </aside>
+
+    <main>
+      <div class="study-hint">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8493ac" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        <span id="studyHint"></span>
+      </div>
+      <div class="cards" id="cards"></div>
+
+      <footer class="glass">
+        <span id="footTxt"></span>
+        <div class="g" id="footNote"></div>
+        <div class="reviewed" id="footReviewed"></div>
+      </footer>
+    </main>
+
+    <aside class="rightcol" id="rightcol">
+
+      <section class="rpanel glass" id="panelBreath">
+        <div class="rp-head"><span class="rp-ic">🌊</span><h3 data-i18n="pBreathT">Légzés & Tengerpart</h3>
+          <button class="rp-x" id="rightClose" aria-label="Close">✕</button></div>
+        <p class="rp-sub" data-i18n="pBreathS">Lélegezz a hullámokkal.</p>
+        <div class="beach" id="beach">
+          <canvas id="waveCv"></canvas>
+          <div class="orb" id="orb"></div>
+          <div class="cnt" id="brCount"></div>
+          <div class="phase" id="brPhase"></div>
+        </div>
+        <div class="br-modes" id="brModes"></div>
+        <div class="br-row">
+          <button class="br-btn" id="brStart">▶ <span data-i18n="brStart">Indítás</span></button>
+          <button class="br-btn sec" id="brSound">🔈 <span data-i18n="brSound">Hang</span></button>
+        </div>
+        <div class="br-meta"><span id="brMetaL"></span><span id="brMetaR"></span></div>
+        <div class="sleep-row">
+          <span class="lb" data-i18n="sleepLbl">😴 Elalvás-időzítő:</span>
+          <button class="sl-btn" data-min="0" aria-pressed="true" data-i18n="sleepOff">Ki</button>
+          <button class="sl-btn" data-min="5" aria-pressed="false">5 min</button>
+          <button class="sl-btn" data-min="10" aria-pressed="false">10 min</button>
+          <button class="sl-btn" data-min="20" aria-pressed="false">20 min</button>
+        </div>
+      </section>
+
+      <section class="rpanel glass" id="panelTrack">
+        <div class="rp-head"><span class="rp-ic">✅</span><h3 data-i18n="pTrackT">Mai magok</h3></div>
+        <div class="trk-top"><span class="n" id="trkN">0</span><span class="of" id="trkOf"></span>
+          <span class="streak" id="trkStreak"></span></div>
+        <div class="bar"><i id="trkBar"></i></div>
+        <div class="chips" id="trkChips"></div>
+        <button class="rp-reset" id="trkReset" data-i18n="trkReset">Mai nap törlése</button>
+      </section>
+
+      <section class="rpanel glass" id="panelTimers">
+        <div class="rp-head"><span class="rp-ic">⏱️</span><h3 data-i18n="pTimerT">Aktív áztatások</h3></div>
+        <div class="timers" id="timerList"></div>
+      </section>
+
+      <section class="rpanel glass" id="panelTips">
+        <div class="rp-head"><span class="rp-ic">💡</span><h3 data-i18n="pTipsT">Napi tipp</h3></div>
+        <div class="tiplist" id="tipList"></div>
+      </section>
+
+    </aside>
+  </div>
+</div>
+
+<nav class="tabbar" id="tabbar">
+  <button id="tbMenu"><span class="i">☰</span><span data-i18n="tbSeeds">Magok</span></button>
+  <button id="tbCompare"><span class="i">📊</span><span data-i18n="tbCompare">Táblázat</span></button>
+  <button id="tbTable"><span class="i">⏱️</span><span data-i18n="tbSoak">Áztatás</span></button>
+  <button id="tbStudy"><span class="i">🔬</span><span data-i18n="tbBest">Hatás</span></button>
+  <button id="tbPanels"><span class="i">🌊</span><span data-i18n="tbPanels">Panelek</span></button>
+</nav>
+
+<div class="dim" id="dim"></div>
+
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal glass" id="modalCard">
+    <div class="modal-head">
+      <span class="mh-ic" id="modalIcon"></span>
+      <div class="mh-t">
+        <h3 id="modalTitle"></h3>
+        <span class="tier-pill lg" id="modalTier"></span>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-note" id="modalNote"></div>
+  </div>
+</div>
+
+<!-- Nyelvfüggetlen adatok, majd az alapértelmezett nyelv, majd a logika.
+     Sima script tag (nem ES modul), hogy duplakattintással is megnyíljon. -->
+<script src="js/data.js"></script>
+<script src="js/lang/hu.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
