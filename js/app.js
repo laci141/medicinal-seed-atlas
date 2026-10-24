@@ -178,7 +178,23 @@ function fmtRemain(ms){ if(ms<0)ms=0; var s=Math.floor(ms/1000);
   return (h>0?h+':':'')+pad(m)+':'+pad(s); }
 function icsStamp(d){ return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+
   pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'; }
-function stripTags(t){return (t||'').replace(/<[^>]+>/g,'').replace(/[,;]/g,' ');}
+function stripTags(t){return (t||'').replace(/<[^>]+>/g,'');}
+/* RFC 5545 3.3.11: a TEXT értékben a \ ; , és az újsor escape-elendő. */
+function icsText(s){
+  return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,')
+    .replace(/\r\n|\r|\n/g,'\\n');
+}
+/* RFC 5545 3.1: 75 oktettnél hosszabb sort CRLF + szóköz tör; több bájtos UTF-8 karaktert nem vágunk ketté. */
+function icsFold(line){
+  var out='', n=0;
+  for(var i=0;i<line.length;){
+    var cp=line.codePointAt(i), ch=String.fromCodePoint(cp),
+        b=cp<0x80?1:cp<0x800?2:cp<0x10000?3:4;
+    if(n+b>75){ out+='\r\n '; n=1; }
+    out+=ch; n+=b; i+=ch.length;
+  }
+  return out;
+}
 function nextAt(hhmm){var p=(hhmm||'08:00').split(':');var d=new Date();
   d.setHours(parseInt(p[0],10)||8,parseInt(p[1],10)||0,0,0);
   if(d.getTime()<=Date.now())d.setDate(d.getDate()+1); return d;}
@@ -198,10 +214,10 @@ function downloadICS(name,end){
   var e2=new Date(end.getTime()+15*60000);
   dlFile(['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Magok//Soak//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',
     'BEGIN:VEVENT','UID:soak-'+Date.now()+'@magok','DTSTAMP:'+icsStamp(new Date()),
-    'DTSTART:'+icsStamp(end),'DTEND:'+icsStamp(e2),'SUMMARY:'+stripTags(name+' '+T().calDone),
-    'DESCRIPTION:'+stripTags(T().calDoneDesc),
-    'BEGIN:VALARM','TRIGGER:-PT10M','ACTION:DISPLAY','DESCRIPTION:'+stripTags(name),'END:VALARM',
-    'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:'+stripTags(name),'END:VALARM',
+    'DTSTART:'+icsStamp(end),'DTEND:'+icsStamp(e2),icsFold('SUMMARY:'+icsText(stripTags(name+' '+T().calDone))),
+    icsFold('DESCRIPTION:'+icsText(stripTags(T().calDoneDesc))),
+    'BEGIN:VALARM','TRIGGER:-PT10M','ACTION:DISPLAY',icsFold('DESCRIPTION:'+icsText(stripTags(name))),'END:VALARM',
+    'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY',icsFold('DESCRIPTION:'+icsText(stripTags(name))),'END:VALARM',
     'END:VEVENT','END:VCALENDAR'].join('\r\n'), slug(name)+'-soak.ics','text/calendar;charset=utf-8');
 }
 function gcalDaily(name,start,tip){
@@ -215,8 +231,8 @@ function downloadICSDaily(name,start,tip){
   dlFile(['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Magok//Daily//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',
     'BEGIN:VEVENT','UID:daily-'+Date.now()+'@magok','DTSTAMP:'+icsStamp(new Date()),
     'DTSTART:'+icsStamp(start),'DTEND:'+icsStamp(e2),'RRULE:FREQ=DAILY',
-    'SUMMARY:'+stripTags(name+' '+T().calDaily),'DESCRIPTION:'+(stripTags(tip)||''),
-    'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:'+stripTags(name),'END:VALARM',
+    icsFold('SUMMARY:'+icsText(stripTags(name+' '+T().calDaily))),icsFold('DESCRIPTION:'+icsText(stripTags(tip))),
+    'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY',icsFold('DESCRIPTION:'+icsText(stripTags(name))),'END:VALARM',
     'END:VEVENT','END:VCALENDAR'].join('\r\n'), slug(name)+'-daily.ics','text/calendar;charset=utf-8');
 }
 
@@ -396,7 +412,21 @@ function openModal(html,title,tier,iconHtml,accent,pillText){
 function closeModal(){ overlay.classList.remove('open'); if(lastFocus&&lastFocus.focus)lastFocus.focus(); }
 mClose.addEventListener('click',closeModal);
 overlay.addEventListener('click',function(e){ if(e.target===overlay)closeModal(); });
-document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&overlay.classList.contains('open'))closeModal(); });
+/* Fókuszcsapda: nyitott ablaknál a Tab / Shift+Tab csak a #modalCard elemein körbe jár. */
+function modalFocusables(){
+  return Array.prototype.filter.call(modalCard.querySelectorAll(
+    'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'),
+    function(el){ return el.getClientRects().length>0; });
+}
+document.addEventListener('keydown',function(e){
+  if(!overlay.classList.contains('open'))return;
+  if(e.key==='Escape'){ closeModal(); return; }
+  if(e.key!=='Tab')return;
+  var f=modalFocusables(); if(!f.length){ e.preventDefault(); return; }
+  var i=f.indexOf(document.activeElement);
+  if(e.shiftKey){ if(i<=0){ e.preventDefault(); f[f.length-1].focus(); } }
+  else if(i===-1||i===f.length-1){ e.preventDefault(); f[0].focus(); }
+});
 document.getElementById('primerBtn').addEventListener('click',function(){
   openModal(renderPrimer(),T().primerTitle,null,'📖','#38bdf8'); });
 document.getElementById('soakTableBtn').addEventListener('click',function(){
@@ -406,6 +436,11 @@ document.getElementById('bestBtn').addEventListener('click',function(){
 document.getElementById('compareBtn').addEventListener('click',openCompare);
 document.getElementById('studyBtn').addEventListener('click',function(){
   openModal(renderAllStudies(),T().studyT,null,'🔬','#7dd3fc',T().studyPill); });
+/* Mobilon ugyanez a két ablak a bal menü aljáról nyílik; bezáráskor a fókusz a menügombra tér vissza. */
+document.getElementById('sidePrimer').addEventListener('click',function(){
+  setNav('closed'); openModal(renderPrimer(),T().primerTitle,null,'📖','#38bdf8'); lastFocus=menuBtn; });
+document.getElementById('sideStudy').addEventListener('click',function(){
+  setNav('closed'); openModal(renderAllStudies(),T().studyT,null,'🔬','#7dd3fc',T().studyPill); lastFocus=menuBtn; });
 
 /* ---------- Menük ---------- */
 var shell=document.getElementById('shell'),menuBtn=document.getElementById('menuBtn'),
@@ -413,7 +448,10 @@ var shell=document.getElementById('shell'),menuBtn=document.getElementById('menu
     rbackdrop=document.getElementById('rbackdrop');
 function setNav(st){shell.setAttribute('data-nav',st);menuBtn.setAttribute('aria-expanded',st==='open'?'true':'false');}
 function setRight(st){shell.setAttribute('data-right',st);
-  var tb=document.getElementById('tbPanels'); if(tb)tb.setAttribute('aria-pressed',st==='open'?'true':'false');}
+  var tb=document.getElementById('tbPanels'); if(tb)tb.setAttribute('aria-pressed',st==='open'?'true':'false');
+  /* Zárt panelnél nincs kinek légzést vezetni: a futó kör leáll. */
+  if(st!=='open'&&brOn){ brOn=false; brPhase=0; brCycles=0; renderBrMeta(); }
+  syncLoop();}
 menuBtn.addEventListener('click',function(){setNav(shell.getAttribute('data-nav')==='open'?'closed':'open');});
 collapseBtn.addEventListener('click',function(){setNav('closed');});
 backdrop.addEventListener('click',function(){setNav('closed');});
@@ -451,6 +489,8 @@ function sizeCanvas(){
   seedMotes(r.width,r.height);
 }
 window.addEventListener('resize',sizeCanvas);
+/* Asztalon a panel nyitásakor a rácsoszlop 0 px-ről nő: a vászon kövesse a valódi méretet. */
+if(window.ResizeObserver) new ResizeObserver(function(){ if(brRAF!==null) sizeCanvas(); }).observe(beach);
 
 /* Lassan felfelé szálló apró fénypontok — mélységet adnak a víznek. */
 function seedMotes(w,h){
@@ -500,7 +540,7 @@ function drawBeach(){
   refl.addColorStop(0,'rgba('+cs+',0.20)'); refl.addColorStop(1,'rgba('+cs+',0)');
   ctx.fillStyle=refl;
   ctx.beginPath();
-  ctx.ellipse(cx,ry,rr,R*0.42+Math.sin(waveT*1.7)*2.5,0,0,6.283);
+  ctx.ellipse(cx,ry,rr,Math.max(0,R*0.42+Math.sin(waveT*1.7)*2.5),0,0,6.283);
   ctx.fill();
   ctx.restore();
 
@@ -586,7 +626,6 @@ function stepBreath(now){
   var left=Math.max(0,Math.ceil(dur-el));
   phaseEl.textContent=phaseName(brPhase)+' · '+left+'s';
   cntEl.textContent=T().brCycle+' '+(brCycles+1);
-  setOceanIntensity(brPhase===0?0.35+f*0.6:(brPhase===2?0.95-f*0.6:(brPhase===1?0.95:0.35)));
 }
 function loop(now){
   waveT+=0.016*(1+breath*0.8);
@@ -600,6 +639,20 @@ function loop(now){
   drawBeach();
   brRAF=requestAnimationFrame(loop);
 }
+/* Az animáció csak akkor fut, ha a jobb panel nyitva van és a lap látható — különben meríti az akkut. */
+function startLoop(){
+  if(brRAF!==null) return;
+  sizeCanvas();  /* rejtett állapotban a vászon mérete 0 lehetett */
+  brRAF=requestAnimationFrame(loop);
+}
+function stopLoop(){
+  if(brRAF===null) return;
+  cancelAnimationFrame(brRAF); brRAF=null;
+}
+function syncLoop(){
+  if(shell.getAttribute('data-right')==='open'&&!document.hidden) startLoop(); else stopLoop();
+}
+document.addEventListener('visibilitychange',syncLoop);
 function renderModes(){
   var box=document.getElementById('brModes'), m=T().brModes;
   box.innerHTML=Object.keys(PATTERNS).map(function(k){
@@ -620,58 +673,23 @@ function renderBrMeta(){
 }
 document.getElementById('brStart').addEventListener('click',function(){
   brOn=!brOn; brPhase=0; brT0=performance.now(); if(!brOn)brCycles=0;
-  if(brOn&&soundOn)ensureAudio();
   renderBrMeta();
 });
 
-/* ---------- Óceán-hang (WebAudio, külső fájl nélkül) ---------- */
-var actx=null, noiseSrc=null, oceanFilter=null, oceanGain=null, soundOn=false, masterVol=0.5;
-function ensureAudio(){
-  if(actx) { if(actx.state==='suspended')actx.resume(); return; }
-  try{
-    actx=new (window.AudioContext||window.webkitAudioContext)();
-    var len=actx.sampleRate*4, buf=actx.createBuffer(1,len,actx.sampleRate), dat=buf.getChannelData(0);
-    var last=0;
-    for(var i=0;i<len;i++){ var wn=Math.random()*2-1; last=(last+0.02*wn)/1.02; dat[i]=last*3.2; }
-    noiseSrc=actx.createBufferSource(); noiseSrc.buffer=buf; noiseSrc.loop=true;
-    oceanFilter=actx.createBiquadFilter(); oceanFilter.type='lowpass';
-    oceanFilter.frequency.value=520; oceanFilter.Q.value=0.7;
-    oceanGain=actx.createGain(); oceanGain.gain.value=0;
-    noiseSrc.connect(oceanFilter); oceanFilter.connect(oceanGain); oceanGain.connect(actx.destination);
-    noiseSrc.start(0);
-  }catch(e){ actx=null; }
-}
-function setOceanIntensity(v){
-  if(!actx||!soundOn||!oceanGain)return;
-  var g=Math.max(0,Math.min(1,v))*0.34*masterVol;
-  oceanGain.gain.setTargetAtTime(g,actx.currentTime,0.35);
-  oceanFilter.frequency.setTargetAtTime(360+v*760,actx.currentTime,0.4);
-}
-document.getElementById('brSound').addEventListener('click',function(){
-  soundOn=!soundOn;
-  if(soundOn){ ensureAudio(); setOceanIntensity(0.6); }
-  else if(oceanGain&&actx){ oceanGain.gain.setTargetAtTime(0,actx.currentTime,0.25); }
-  this.innerHTML=(soundOn?'🔊 ':'🔈 ')+(soundOn?T().brSoundOn:T().brSoundOff);
-});
-
-/* ---------- Elalvás-időzítő ---------- */
+/* ---------- Elalvás-időzítő (csak a képernyő sötétedik) ---------- */
 var sleepTimer=null, dim=document.getElementById('dim');
 function setSleep(min){
   document.querySelectorAll('.sl-btn').forEach(function(b){
     b.setAttribute('aria-pressed', String(parseFloat(b.getAttribute('data-min'))===min)); });
-  clearInterval(sleepTimer); dim.classList.remove('catch'); dim.style.opacity=0; masterVol=0.5;
+  clearInterval(sleepTimer); dim.classList.remove('catch'); dim.style.opacity=0;
   if(!min)return;
   var ms=min*60000, t0=Date.now();
   sleepTimer=setInterval(function(){
     var p=Math.min(1,(Date.now()-t0)/ms);
-    masterVol=0.5*(1-p);
     dim.style.opacity=(p*0.94).toFixed(3);
     /* csak sötétedés után nyeli el a koppintást, hogy az app közben használható maradjon */
     if(p>0.6) dim.classList.add('catch'); else dim.classList.remove('catch');
-    if(actx&&soundOn&&oceanGain) oceanGain.gain.setTargetAtTime(0.34*masterVol*0.6,actx.currentTime,1);
-    if(p>=1){ clearInterval(sleepTimer);
-      if(oceanGain&&actx)oceanGain.gain.setTargetAtTime(0,actx.currentTime,2);
-      brOn=false; renderBrMeta(); }
+    if(p>=1){ clearInterval(sleepTimer); brOn=false; renderBrMeta(); }
   },1000);
 }
 document.querySelectorAll('.sl-btn').forEach(function(b){
@@ -700,7 +718,6 @@ function applyI18n(){
   document.getElementById('modalNote').textContent=t.modalNote;
   document.getElementById('collapseBtn').setAttribute('aria-label',t.menuTitle);
   document.getElementById('modalClose').setAttribute('aria-label',t.closeLbl);
-  document.getElementById('brSound').innerHTML=(soundOn?'🔊 ':'🔈 ')+(soundOn?t.brSoundOn:t.brSoundOff);
   document.querySelectorAll('.lang').forEach(function(b){
     b.setAttribute('aria-pressed',String(b.getAttribute('data-lang')===LANG)); });
 }
@@ -966,4 +983,4 @@ else if(window.matchMedia('(max-width:1240px)').matches){ setRight('closed'); }
 wireSearch();
 ensureLang(LANG,function(){ renderAll(); });
 sizeCanvas();
-brRAF=requestAnimationFrame(loop);
+syncLoop();

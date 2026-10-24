@@ -68,9 +68,6 @@ registerLanguage("de", {
   "pBreathS": "Eine Pause beim Lernen: atme mit den Wellen, dann zurück zu den Karten.",
   "brStart": "Start",
   "brStop": "Stopp",
-  "brSound": "Ton",
-  "brSoundOn": "Ton AN",
-  "brSoundOff": "Ton AUS",
   "brIn": "Einatmen",
   "brHold": "Halten",
   "brOut": "Ausatmen",
@@ -89,7 +86,7 @@ registerLanguage("de", {
    "coh": "Herzratenkohärenz",
    "ocean": "Langsame, wellenartige Ruhe"
   },
-  "sleepLbl": "😴 Einschlaf-Timer (Ton und Licht blenden langsam aus):",
+  "sleepLbl": "😴 Einschlaf-Timer (der Bildschirm wird langsam dunkel):",
   "sleepOff": "Aus",
   "pTrackT": "Samen von heute",
   "trkOf": "/ 15 Samen heute",
