@@ -68,9 +68,6 @@ registerLanguage("en", {
   "pBreathS": "A break while you study: breathe with the waves, then back to the cards.",
   "brStart": "Start",
   "brStop": "Stop",
-  "brSound": "Sound",
-  "brSoundOn": "Sound ON",
-  "brSoundOff": "Sound OFF",
   "brIn": "Breathe in",
   "brHold": "Hold",
   "brOut": "Breathe out",
@@ -89,7 +86,7 @@ registerLanguage("en", {
    "coh": "Heart-rate coherence",
    "ocean": "Slow, wave-like calm"
   },
-  "sleepLbl": "😴 Sleep timer (sound and light fade out slowly):",
+  "sleepLbl": "😴 Sleep timer (the screen slowly dims):",
   "sleepOff": "Off",
   "pTrackT": "Today's seeds",
   "trkOf": "/ 15 seeds today",

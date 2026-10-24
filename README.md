@@ -18,8 +18,8 @@ exists, the card says so instead of implying evidence that isn't there.
 - **Consumption guide** per seed — soaking time, amount, timing, and a soaking countdown that
   survives a page reload and can be exported to Google Calendar or an `.ics` file.
 - **Breathing & beach panel** — an animated shoreline whose waves follow your breath, four
-  patterns (box 4-4-4-4, 4-7-8, coherence 5.5, ocean 4-6), a generated surf soundscape that
-  needs no audio files, and a sleep timer that fades sound and light.
+  patterns (box 4-4-4-4, 4-7-8, coherence 5.5, ocean 4-6), and a sleep timer that slowly
+  dims the screen.
 - **Daily tracker** with a streak, and a rotating evidence-based tip.
 
 ## Running it

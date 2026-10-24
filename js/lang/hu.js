@@ -68,9 +68,6 @@ registerLanguage("hu", {
   "pBreathS": "Tanulás közbeni szünet: lélegezz a hullámokkal, aztán vissza a kártyákhoz.",
   "brStart": "Indítás",
   "brStop": "Leállítás",
-  "brSound": "Hang",
-  "brSoundOn": "Hang BE",
-  "brSoundOff": "Hang KI",
   "brIn": "Belégzés",
   "brHold": "Bent tartás",
   "brOut": "Kilégzés",
@@ -89,7 +86,7 @@ registerLanguage("hu", {
    "coh": "Szívritmus-koherencia",
    "ocean": "Lassú, hullámzó nyugalom"
   },
-  "sleepLbl": "😴 Elalvás-időzítő (a hang és a fény lassan elhalkul):",
+  "sleepLbl": "😴 Elalvás-időzítő (a képernyő lassan elsötétül):",
   "sleepOff": "Ki",
   "pTrackT": "Mai magok",
   "trkOf": "/ 15 mag ma",

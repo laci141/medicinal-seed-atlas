@@ -68,9 +68,6 @@ registerLanguage("ro", {
   "pBreathS": "O pauză în timpul învățării: respiră cu valurile, apoi înapoi la carduri.",
   "brStart": "Start",
   "brStop": "Stop",
-  "brSound": "Sunet",
-  "brSoundOn": "Sunet PORNIT",
-  "brSoundOff": "Sunet OPRIT",
   "brIn": "Inspiră",
   "brHold": "Ține",
   "brOut": "Expiră",
@@ -89,7 +86,7 @@ registerLanguage("ro", {
    "coh": "Coerență cardiacă",
    "ocean": "Calm lent, ca valurile"
   },
-  "sleepLbl": "😴 Cronometru de adormire (sunetul și lumina se sting treptat):",
+  "sleepLbl": "😴 Cronometru de adormire (ecranul se întunecă treptat):",
   "sleepOff": "Oprit",
   "pTrackT": "Semințele de azi",
   "trkOf": "/ 15 semințe azi",

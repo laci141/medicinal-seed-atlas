@@ -474,3 +474,30 @@ footer .g{color:#34d399;margin-top:6px;font-size:11px}
 .cmp-table td.num.nodata{color:#6b7a91;font-weight:400}
 .reviewed{font-size:11px;color:var(--muted);margin-top:8px}
 .reviewed b{color:#94a3b8;font-weight:600}
+
+/* ===== MOBIL: tömör fejléc, eszközgombok a bal menüben, 44 px érintési célok =====
+   A fájl végén áll, hogy a fenti .seg button / .chip szabályokat is felülírja. */
+.side-tools{display:none}
+@media (max-width:760px){
+  /* 1. sor: menügomb + cím, 2. sor: nyelvválasztó teljes szélességben */
+  .titlewrap{min-width:0}
+  .titlewrap h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .titlewrap p,.toolbtns{display:none}
+  .langs{display:flex;flex:1 0 100%}
+  .lang{flex:1}
+  /* a felső sorból kikerült két gomb, ami az alsó sávon sincs meg */
+  .side-tools{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+  .side-tools .primer-btn{width:100%;white-space:normal;text-align:left}
+
+  .lang,.br-mode,.sl-btn,.chip,.rp-reset,.seg button{min-height:44px}
+  .sl-btn{min-width:44px}
+  .rp-head .rp-x,.collapse{width:44px;height:44px}
+}
+/* Keskeny telefonon a két kapcsolócsoport egy sorban marad */
+@media (max-width:400px){
+  .cmp-tools{flex-wrap:nowrap;gap:8px}
+  .cmp-tools>div{flex:1 1 0;min-width:0}
+  .seg-lbl{display:none}
+  .seg{display:flex;width:100%}
+  .seg button{flex:1 1 auto;padding:6px 7px;font-size:11.5px;white-space:normal;line-height:1.15}
+}
