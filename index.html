@@ -36,7 +36,7 @@
       <button class="primer-btn" id="soakTableBtn">⏱️ <span data-i18n="btnSoakTable">Áztatás-táblázat</span></button>
       <button class="primer-btn" id="studyBtn">🔬 <span data-i18n="studyAll">Minden hivatkozás</span></button>
       <button class="primer-btn" id="bestBtn">🎯 <span data-i18n="btnBest">Legjobb hatás</span></button>
-      <button class="primer-btn" id="rightBtn">🌊 <span data-i18n="btnPanels">Panelek</span></button>
+      <button class="primer-btn" id="rightBtn">📋 <span data-i18n="btnPanels">Panelek</span></button>
     </div>
   </div>
 
@@ -77,31 +77,9 @@
 
     <aside class="rightcol" id="rightcol">
 
-      <section class="rpanel glass" id="panelBreath">
-        <div class="rp-head"><span class="rp-ic">🌊</span><h3 data-i18n="pBreathT">Légzés & Tengerpart</h3>
-          <button class="rp-x" id="rightClose" aria-label="Close">✕</button></div>
-        <p class="rp-sub" data-i18n="pBreathS">Lélegezz a hullámokkal.</p>
-        <div class="beach" id="beach">
-          <canvas id="waveCv"></canvas>
-          <div class="cnt" id="brCount"></div>
-          <div class="phase" id="brPhase"></div>
-        </div>
-        <div class="br-modes" id="brModes"></div>
-        <div class="br-row">
-          <button class="br-btn" id="brStart">▶ <span data-i18n="brStart">Indítás</span></button>
-        </div>
-        <div class="br-meta"><span id="brMetaL"></span><span id="brMetaR"></span></div>
-        <div class="sleep-row">
-          <span class="lb" data-i18n="sleepLbl">😴 Elalvás-időzítő:</span>
-          <button class="sl-btn" data-min="0" aria-pressed="true" data-i18n="sleepOff">Ki</button>
-          <button class="sl-btn" data-min="5" aria-pressed="false">5 min</button>
-          <button class="sl-btn" data-min="10" aria-pressed="false">10 min</button>
-          <button class="sl-btn" data-min="20" aria-pressed="false">20 min</button>
-        </div>
-      </section>
-
       <section class="rpanel glass" id="panelTrack">
-        <div class="rp-head"><span class="rp-ic">✅</span><h3 data-i18n="pTrackT">Mai magok</h3></div>
+        <div class="rp-head"><span class="rp-ic">✅</span><h3 data-i18n="pTrackT">Mai magok</h3>
+          <button class="rp-x" id="rightClose" aria-label="Close">✕</button></div>
         <p class="rp-sub" data-i18n="pTrackS"></p>
         <div class="trk-top"><span class="n" id="trkN">0</span><span class="of" id="trkOf"></span>
           <span class="streak" id="trkStreak"></span></div>
@@ -131,10 +109,8 @@
   <button id="tbCompare"><span class="i">📊</span><span data-i18n="tbCompare">Táblázat</span></button>
   <button id="tbTable"><span class="i">⏱️</span><span data-i18n="tbSoak">Áztatás</span></button>
   <button id="tbStudy"><span class="i">🔬</span><span data-i18n="tbBest">Hatás</span></button>
-  <button id="tbPanels"><span class="i">🌊</span><span data-i18n="tbPanels">Panelek</span></button>
+  <button id="tbPanels"><span class="i">📋</span><span data-i18n="tbPanels">Panelek</span></button>
 </nav>
-
-<div class="dim" id="dim"></div>
 
 <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal glass" id="modalCard">
