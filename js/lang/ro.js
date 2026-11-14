@@ -98,7 +98,7 @@ registerLanguage("ro", {
   "studyNone": "Pentru această sămânță PubMed nu indexează niciun studiu clinic uman.",
   "studyIntro": "Am pus sursa în spatele fiecărei afirmații. Linkul <b>PubMed</b> duce la baza de date medicală oficială, <b>DOI</b> la articolul original, iar <b>OpenAlex</b> arată câți l-au citat de atunci.",
   "srcNote": "Date nutriționale: USDA FoodData Central. Studii: PubMed (NLM/NIH) și OpenAlex.",
-  "searchPh": "Caută printre semințe…",
+  "searchPh": "Caută semințe…",
   "searchNone": "Niciun rezultat pentru:",
   "lblAmount": "Cantitate",
   "amt100": "100 g",

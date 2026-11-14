@@ -37,6 +37,10 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;
 .menu-btn:focus-visible,.primer-btn:focus-visible,.lang-btn:focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
 .menu-btn svg{width:18px;height:18px}
 .primer-btn{border-color:rgba(56,189,248,.4);color:#bae6fd}
+@media (min-width:761px) and (max-width:1240px){
+  .toolbtns{gap:5px}
+  .toolbtns .primer-btn{gap:5px;padding-left:9px;padding-right:9px;font-size:12px}
+}
 .titlewrap{flex:1;min-width:160px}
 .titlewrap h1{font-family:var(--disp);font-weight:700;margin:0;font-size:clamp(19px,3.4vw,28px);
   letter-spacing:-.01em;line-height:1.1}
@@ -88,7 +92,8 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;
   font-size:11px;color:var(--muted);line-height:1.5}
 
 /* ===== KÁRTYÁK ===== */
-.study-hint{display:flex;align-items:center;gap:8px;margin:0 4px 14px;font-size:12.5px;color:var(--muted)}
+.study-hint{display:flex;align-items:flex-start;gap:8px;margin:0 4px 14px;font-size:12.5px;color:var(--muted)}
+.study-hint svg{margin-top:2px}
 .study-hint b{color:var(--ink);font-weight:500}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:18px}
 @media (max-width:420px){.cards{grid-template-columns:1fr;gap:14px}}
