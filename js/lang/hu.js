@@ -98,7 +98,7 @@ registerLanguage("hu", {
   "studyNone": "Ehhez a maghoz a PubMed nem indexel humán klinikai vizsgálatot.",
   "studyIntro": "Minden állítás mögé odatettük a forrást. A <b>PubMed</b> link a hivatalos orvosi adatbázisba visz, a <b>DOI</b> az eredeti cikkhez, az <b>OpenAlex</b> pedig megmutatja, hányan hivatkoztak rá azóta.",
   "srcNote": "Tápértékadatok: USDA FoodData Central. Vizsgálatok: PubMed (NLM/NIH) és OpenAlex.",
-  "searchPh": "Keresés a magok között…",
+  "searchPh": "Mag keresése…",
   "searchNone": "Nincs találat erre:",
   "lblAmount": "Mennyiség",
   "amt100": "100 g",

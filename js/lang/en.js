@@ -98,7 +98,7 @@ registerLanguage("en", {
   "studyNone": "PubMed indexes no human clinical trial for this seed.",
   "studyIntro": "Every claim has its source attached. The <b>PubMed</b> link goes to the official medical database, <b>DOI</b> to the original paper, and <b>OpenAlex</b> shows how many have cited it since.",
   "srcNote": "Nutrient data: USDA FoodData Central. Studies: PubMed (NLM/NIH) and OpenAlex.",
-  "searchPh": "Search the seeds…",
+  "searchPh": "Search seeds…",
   "searchNone": "No match for:",
   "lblAmount": "Amount",
   "amt100": "100 g",

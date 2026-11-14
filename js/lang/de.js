@@ -98,7 +98,7 @@ registerLanguage("de", {
   "studyNone": "Für diesen Samen indexiert PubMed keine klinische Humanstudie.",
   "studyIntro": "Hinter jeder Aussage steht die Quelle. Der <b>PubMed</b>-Link führt zur offiziellen medizinischen Datenbank, <b>DOI</b> zum Originalartikel, und <b>OpenAlex</b> zeigt, wie oft er seither zitiert wurde.",
   "srcNote": "Nährwertdaten: USDA FoodData Central. Studien: PubMed (NLM/NIH) und OpenAlex.",
-  "searchPh": "Samen durchsuchen…",
+  "searchPh": "Samen suchen…",
   "searchNone": "Kein Treffer für:",
   "lblAmount": "Menge",
   "amt100": "100 g",
