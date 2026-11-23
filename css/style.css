@@ -88,6 +88,35 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;
 .navitem .tierdot{width:7px;height:7px;border-radius:2px;flex:0 0 auto}
 .navitem .eaten{font-size:11px;color:#34d399;opacity:0}
 .navitem[data-eaten="1"] .eaten{opacity:1}
+.side-pages{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,.09)}
+.pageitem{display:flex;align-items:center;gap:10px;width:100%;cursor:pointer;text-align:left;
+  padding:9px 9px;border-radius:11px;background:none;border:1px solid transparent;min-height:40px;
+  color:var(--ink);font-family:var(--disp);font-size:14px;font-weight:500;transition:.18s}
+.pageitem:hover{background:rgba(255,255,255,.05)}
+.pageitem:focus-visible{outline:2px solid #38bdf8;outline-offset:1px}
+.pageitem .ic{width:18px;text-align:center;flex:0 0 auto;font-size:13px}
+.pageitem .k{flex:1}
+.pageitem[aria-pressed="true"]{background:rgba(125,211,252,.12);border-color:rgba(125,211,252,.35)}
+
+/* ===== VIDEÓ OLDAL ===== */
+#videoPage{display:none}
+.shell[data-view="videos"] #videoPage{display:block}
+.shell[data-view="videos"] .cards,.shell[data-view="videos"] .study-hint{display:none}
+.vid-head{padding:16px 18px;margin-bottom:18px}
+.vid-head h2{margin:0 0 4px;font-family:var(--disp);font-size:20px;font-weight:600}
+.vid-head p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+.vid-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.vid-card{padding:14px}
+.vid-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
+  background:radial-gradient(circle at 30% 30%, rgba(56,189,248,.22), transparent 65%), rgba(0,0,0,.35)}
+.vid-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid-ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:12px;
+  letter-spacing:.3em;text-transform:uppercase}
+.vid-title{margin:11px 4px 2px;display:flex;flex-direction:column;gap:2px;min-height:2.8em;font-weight:600;font-size:15px}
+.vid-line{display:block;line-height:1.32;overflow-wrap:anywhere}
+.vid-line.second{font-weight:400;color:var(--muted);font-size:13px}
+.vid-line.placeholder{color:var(--muted)}
 .side-note{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.09);
   font-size:11px;color:var(--muted);line-height:1.5}
 
@@ -452,7 +481,9 @@ footer .g{color:#34d399;margin-top:6px;font-size:11px}
   .side-tools{display:flex;flex-direction:column;gap:8px;margin-top:14px}
   .side-tools .primer-btn{width:100%;white-space:normal;text-align:left}
 
-  .lang,.chip,.rp-reset,.seg button{min-height:44px}
+  .lang,.chip,.rp-reset,.seg button,.pageitem{min-height:44px}
+  .vid-grid{grid-template-columns:1fr;gap:14px}
+  .vid-card{padding:10px}
   .rp-head .rp-x,.collapse{width:44px;height:44px}
 }
 /* Keskeny telefonon a két kapcsolócsoport egy sorban marad */

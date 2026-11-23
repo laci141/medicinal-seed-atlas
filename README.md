@@ -1,5 +1,7 @@
 # Medicinal Seed Atlas
 
+🌐 **Live site:** https://medicinal-seed-atlas.pages.dev/
+
 An evidence-rated atlas of 15 edible seeds: flashcards, a sortable nutrient table, soaking
 timers and PubMed-linked research. Available in **Hungarian, Romanian, English and German**.
 
@@ -17,6 +19,9 @@ exists, the card says so instead of implying evidence that isn't there.
   absorption pairings, safety tags and the studies themselves.
 - **Consumption guide** per seed — soaking time, amount, timing, and a soaking countdown that
   survives a page reload and can be exported to Google Calendar or an `.ics` file.
+- **Videos page** — a `▶ Videos` item at the top of the left menu opens 16 YouTube slots
+  (privacy-enhanced `youtube-nocookie.com` embeds, loaded lazily). Add a video by pasting its
+  11-character id into `js/videos.js`; an empty slot shows a placeholder.
 - **Daily tracker** with a streak, and a rotating evidence-based tip.
 
 ## Running it
@@ -35,6 +40,7 @@ Deploying is a matter of pushing the folder to GitHub Pages or Cloudflare Pages 
 index.html          markup only
 css/style.css       all styling, including the glass-panel effect
 js/data.js          language-neutral: seed list, nutrient values, DV table, study IDs
+js/videos.js        the 16 video slots (YouTube ids and titles; titles are not translated)
 js/app.js           all logic
 js/lang/hu.js       ┐ one file per language: UI strings, seed content,
 js/lang/ro.js       │ the evidence primer, tips, and the plain-language
