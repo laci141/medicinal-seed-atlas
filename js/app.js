@@ -131,6 +131,7 @@ function wireNav(){
   document.querySelectorAll('.navitem').forEach(function(item){
     item.addEventListener('click',function(){
       var el=document.getElementById(item.getAttribute('data-target'));
+      if(shell.getAttribute('data-view')!=='cards') setView('cards');
       if(window.matchMedia('(max-width:760px)').matches){setNav('closed');}
       if(!el)return;
       el.scrollIntoView({behavior:'smooth',block:'center'});
@@ -463,6 +464,45 @@ document.getElementById('tbStudy').addEventListener('click',function(){openModal
 document.getElementById('tbPanels').addEventListener('click',function(){setRight(shell.getAttribute('data-right')==='open'?'closed':'open');});
 
 /* =========================================================
+   VIDEÓ OLDAL (bal menü: ▶ Videók) — 16 hely, js/videos.js
+   ========================================================= */
+var videoPage=document.getElementById('videoPage');
+function renderVideos(){
+  var t=T(), list=(typeof VIDEOS!=='undefined')?VIDEOS:[];
+  var cards=list.map(function(v,i){
+    var tl=(v&&v.t)||[], l1=String(tl[0]||''), l2=String(tl[1]||''), id=String((v&&v.id)||'');
+    var ph=String(t.videoPh).replace('{n}',i+1), title=(l1+' '+l2).trim()||ph;
+    /* Csak érvényes, 11 karakteres azonosítóból lesz lejátszó; különben helyőrző. */
+    var player=/^[A-Za-z0-9_-]{11}$/.test(id)
+      ? '<iframe src="https://www.youtube-nocookie.com/embed/'+esc(id)+'?rel=0" title="'+esc(title)+'" loading="lazy"'+
+        ' allow="encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe>'
+      : '<span class="vid-ph">'+esc(t.videoSoon)+'</span>';
+    return '<article class="vid-card glass"><div class="vid-wrap">'+player+'</div>'+
+      '<p class="vid-title">'+
+        (l1?'<span class="vid-line">'+esc(l1)+'</span>':'<span class="vid-line placeholder">'+esc(ph)+'</span>')+
+        '<span class="vid-line second">'+esc(l2)+'&nbsp;</span>'+
+      '</p></article>';
+  }).join('');
+  videoPage.innerHTML=
+    '<div class="vid-head glass"><h2>▶ '+esc(t.videosTitle)+'</h2><p>'+esc(t.videosSub)+'</p></div>'+
+    '<div class="vid-grid">'+cards+'</div>';
+}
+/* Nézetváltás: kártyák vagy videók. A videóoldal elhagyásakor a lejátszók megszűnnek, így a hang sem szól tovább. */
+function setView(v){
+  shell.setAttribute('data-view',v);
+  document.getElementById('pgCards').setAttribute('aria-pressed',String(v==='cards'));
+  document.getElementById('pgVideos').setAttribute('aria-pressed',String(v==='videos'));
+  if(v==='videos') renderVideos(); else videoPage.innerHTML='';
+}
+function openView(v){
+  setView(v);
+  if(window.matchMedia('(max-width:760px)').matches) setNav('closed');
+  window.scrollTo(0,0);
+}
+document.getElementById('pgCards').addEventListener('click',function(){openView('cards');});
+document.getElementById('pgVideos').addEventListener('click',function(){openView('videos');});
+
+/* =========================================================
    NYELVVÁLTÁS
    ========================================================= */
 function applyI18n(){
@@ -488,6 +528,7 @@ function applyI18n(){
 }
 function renderAll(){
   applyI18n(); buildCards(); buildNav(); renderTrack(); renderTimers(); renderTips();
+  if(shell.getAttribute('data-view')==='videos') renderVideos();
 }
 document.querySelectorAll('.lang').forEach(function(b){
   b.addEventListener('click',function(){

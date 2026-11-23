@@ -40,7 +40,7 @@
     </div>
   </div>
 
-  <div class="shell" id="shell" data-nav="open" data-right="open">
+  <div class="shell" id="shell" data-nav="open" data-right="open" data-view="cards">
     <div class="backdrop" id="backdrop"></div>
     <div class="rbackdrop" id="rbackdrop"></div>
 
@@ -51,6 +51,10 @@
         <span class="mag">🔍</span>
         <input type="search" id="navSearch" autocomplete="off" spellcheck="false">
         <button class="clr" id="navClear" aria-label="Clear">✕</button>
+      </div>
+      <div class="side-pages">
+        <button class="pageitem" id="pgCards" aria-pressed="true"><span class="ic">🗂️</span><span class="k" data-i18n="allSeedsNav">Minden mag</span></button>
+        <button class="pageitem" id="pgVideos" aria-pressed="false"><span class="ic">▶</span><span class="k" data-i18n="videosNav">Videók</span></button>
       </div>
       <nav class="nav" id="nav"></nav>
       <!-- Mobilon a felső eszközsor rejtett: ez a két gomb csak itt érhető el. -->
@@ -67,6 +71,7 @@
         <span id="studyHint"></span>
       </div>
       <div class="cards" id="cards"></div>
+      <section id="videoPage"></section>
 
       <footer class="glass">
         <span id="footTxt"></span>
@@ -130,6 +135,7 @@
 <!-- Nyelvfüggetlen adatok, majd az alapértelmezett nyelv, majd a logika.
      Sima script tag (nem ES modul), hogy duplakattintással is megnyíljon. -->
 <script src="js/data.js"></script>
+<script src="js/videos.js"></script>
 <script src="js/lang/hu.js"></script>
 <script src="js/app.js"></script>
 </body>
